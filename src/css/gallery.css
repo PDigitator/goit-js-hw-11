@@ -1,0 +1,129 @@
+:root {
+  --timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  --animation-duration: 250ms;
+}
+
+/* form */
+.section-search-form {
+  position: sticky;
+  top: -1px;
+  z-index: 10;
+
+  padding: 16px 0;
+  background-color: royalblue;
+}
+
+.container {
+  width: 1280px;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.search-form {
+  display: flex;
+  margin-right: auto;
+  margin-left: auto;
+  align-items: center;
+
+  overflow: hidden;
+
+  width: 400px;
+  padding: 25px auto;
+  height: 50px;
+  background-color: white;
+  border-radius: 4px;
+}
+
+.search-form:hover,
+.search-form:focus {
+  outline: solid 1px;
+  outline-color: rgb(7, 181, 250);
+}
+
+.search-form__input {
+  flex-grow: 1;
+  padding-left: 10px;
+
+  border: none;
+  margin: 0;
+  outline: none;
+  height: 30px;
+
+  background-color: white;
+
+  font-size: 18px;
+
+  width: 192px;
+}
+
+.search-form__btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  border: none;
+  outline: none;
+  margin: 0;
+  padding: 0;
+  height: 50px;
+  width: 50px;
+
+  background-color: rgba(211, 211, 211, 0.7);
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.search-form__btn:hover,
+.search-form__btn:focus {
+  background-color: rgb(211, 211, 211);
+}
+
+.section-gallery {
+  padding: 20px 0;
+}
+
+.gallery {
+  display: grid;
+  max-width: 1250px;
+  grid-template-columns: repeat(auto-fit, minmax(303px, 1fr));
+  grid-auto-rows: 240px;
+  grid-gap: 12px;
+  justify-content: center;
+  margin-left: auto;
+  margin-right: auto;
+
+  list-style: none;
+}
+
+.gallery__item {
+  position: relative;
+  box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.2),
+    0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 2px 1px -1px rgba(0, 0, 0, 0.12);
+}
+
+.gallery__thumb {
+  object-fit: cover;
+}
+
+.gallery__image {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  transition: transform var(--animation-duration) var(--timing-function);
+}
+
+.gallery__image:hover {
+  transform: scale(1.03);
+}
+
+.gallery__link {
+  display: block;
+  text-decoration: none;
+  height: 100%;
+}
+
+.gallery__link:hover {
+  cursor: zoom-in;
+}
