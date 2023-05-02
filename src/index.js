@@ -1,6 +1,5 @@
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
-
 import axios from 'axios';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
@@ -9,7 +8,8 @@ import { Notify } from 'notiflix/build/notiflix-notify-aio';
 const searchField = document.querySelector('#search-form');
 const imageGalleryRef = document.querySelector('.gallery');
 // const cardsMarkup = createImageCardsMarkup(galleryItems); //?
-console.log(searchField); //?
+
+const lightbox = new SimpleLightbox('.gallery a');
 
 searchField.addEventListener('submit', onSubmit);
 
@@ -20,18 +20,25 @@ async function onSubmit(evt) {
   // const { searchQuery } = evt.currentTarget.elements; //!
   // const searchName = searchQuery.value.trim(); //!
   if (!searchQuery) {
-    clearGalleryMarkup();
-
+    // clearGalleryMarkup(); //???
+    Notify.info(
+      'Sorry, you need to fill in the search field to search for images.'
+    );
     return;
-  } //???
+  }
 
   try {
     const { data } = await fetchImmages(searchQuery);
-    // div.innerHTML = createMarkupProduct(data);//!
+    if (data.hits.length === 0) {
+      Notify.failure(
+        'Sorry, there are no images matching your search query. Please try again.'
+      );
+    } else {
+      Notify.success(`Hooray! We found ${data.totalHits} images.`);
+      createGalleryMarkup(data.hits);
+    }
 
-    createGalleryMarkup(data.hits);
-    // allProductsRef.innerHTML = createGalleryMarkup(data.hits);//!
-    console.log(data.hits);
+    console.log(data.totalHits); //!
   } catch (error) {
     console.log(error.message);
   }
@@ -49,6 +56,7 @@ async function fetchImmages(query) {
     //! page: 1,
     per_page: 40, //!
   });
+
   return await axios.get(`${BASE_URL}?${params}`);
 }
 
@@ -64,22 +72,22 @@ function createGalleryMarkup(arr) {
         comments,
         downloads,
       }) =>
-        `<li class="gallery__item">
-          <a class="gallery__link" href="${largeImageURL}">
-            <div gallery__thumb>
+        `<li class="gallery__item card-set__item">
+          <a class="gallery__link link" href="${largeImageURL}">
+            <div class="gallery__thumb">
               <img class="gallery__image" src="${webformatURL}" alt="${tags}" loading="lazy" />
             </div>  
-            <div class="info">
-              <p class="info-item">
+            <div class="gallery__info">
+              <p class="gallery__info-item">
                 <b>Likes</b>${likes}
               </p>
-              <p class="info-item">
+              <p class="gallery__info-item">
                 <b>Views</b>${views}
               </p>
-              <p class="info-item">
+              <p class="gallery__info-item">
                 <b>Comments</b>${comments}
               </p>
-              <p class="info-item">
+              <p class="gallery__info-item">
                 <b>Downloads</b>${downloads}
               </p>
             </div>
@@ -89,32 +97,9 @@ function createGalleryMarkup(arr) {
     .join('');
 
   imageGalleryRef.insertAdjacentHTML('beforeend', markup);
+
+  lightbox.refresh();
 }
-
-// function createImageCardsMarkup(images) {
-//   return images
-//     .map(
-//       ({ preview, original, description }) =>
-//         `<li class="gallery__item">
-//           <a class="gallery__link" href="${original}">
-//             <img
-//               class="gallery__image"
-//               src="${preview}"
-//               alt="${description}"
-//             />
-//           </a>
-//         </li>`
-//     )
-//     .join(''); //?
-// }
-
-// imageGallery.insertAdjacentHTML('beforeend', cardsMarkup); //?
-
-// imageGallery.style.listStyle = 'none'; //?
-
-const lightbox = new SimpleLightbox('.gallery a'); //?
-
-// console.log(galleryItems); //!
 
 function clearGalleryMarkup() {
   imageGalleryRef.innerHTML = '';
