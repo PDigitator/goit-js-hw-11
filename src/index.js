@@ -1,15 +1,31 @@
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
-import axios from 'axios';
+import axios from 'axios'; //??
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
+
+import { createGalleryMarkup, clearGalleryMarkup } from './js/gallery-markup';
+// import { fetchImmages } from './js/fetch';//!
 
 // import { galleryItems } from './gallery-items'; //!
 
 const searchField = document.querySelector('#search-form');
-const imageGalleryRef = document.querySelector('.gallery');
-// const cardsMarkup = createImageCardsMarkup(galleryItems); //?
+export const imageGalleryRef = document.querySelector('.gallery');
+const searchBtn = document.querySelector('.search-form__btn');
+const guard = document.querySelector('.guard');
+let searchQuery = '';
 
 const lightbox = new SimpleLightbox('.gallery a');
+
+const options = {
+  root: null,
+  rootMargin: '400px',
+  threshold: 0,
+};
+
+const observer = new IntersectionObserver(onPagination, options); //??
+
+let currentPage = 1;
+const perPage = 40; //??
 
 searchField.addEventListener('submit', onSubmit);
 
@@ -19,7 +35,7 @@ async function onSubmit(evt) {
   const searchQuery = formEl.searchQuery.value.trim();
   // const { searchQuery } = evt.currentTarget.elements; //!
   // const searchName = searchQuery.value.trim(); //!
-  if (!searchQuery) {
+  if (searchQuery === '') {
     // clearGalleryMarkup(); //???
     Notify.info(
       'Sorry, you need to fill in the search field to search for images.'
@@ -27,24 +43,41 @@ async function onSubmit(evt) {
     return;
   }
 
+  clearGalleryMarkup();
+
   try {
-    const { data } = await fetchImmages(searchQuery);
+    const { data } = await fetchImmages(searchQuery, currentPage);
     if (data.hits.length === 0) {
       Notify.failure(
         'Sorry, there are no images matching your search query. Please try again.'
       );
+    } else if (currentPage * perPage > data.totalHits) {
+      Notify.warning(
+        `We're sorry, but you've reached the end of search results.`
+      );
+
+      searchBtn.disabled = true;
     } else {
-      Notify.success(`Hooray! We found ${data.totalHits} images.`);
+      if (currentPage === 1) {
+        Notify.success(`Hooray! We found ${data.totalHits} images.`);
+      }
+
       createGalleryMarkup(data.hits);
+      lightbox.refresh();
+      observer.observe(guard); //??
+      currentPage += 1;
     }
 
+    console.log(data); //!
     console.log(data.totalHits); //!
   } catch (error) {
     console.log(error.message);
   }
+
+  return searchQuery;
 }
 
-async function fetchImmages(query) {
+async function fetchImmages(query, currentPage) {
   const BASE_URL = `https://pixabay.com/api/`;
   const API_KEY = `35918460-7c3da85385fde4b8ea2396448`;
   const params = new URLSearchParams({
@@ -53,54 +86,29 @@ async function fetchImmages(query) {
     image_type: 'photo',
     orientation: 'horizontal',
     safesearch: true,
-    //! page: 1,
-    per_page: 40, //!
+    page: currentPage,
+    per_page: perPage, //!
   });
 
   return await axios.get(`${BASE_URL}?${params}`);
 }
 
-function createGalleryMarkup(arr) {
-  const markup = arr
-    .map(
-      ({
-        webformatURL,
-        largeImageURL,
-        tags,
-        likes,
-        views,
-        comments,
-        downloads,
-      }) =>
-        `<li class="gallery__item card-set__item">
-          <a class="gallery__link link" href="${largeImageURL}">
-            <div class="gallery__thumb">
-              <img class="gallery__image" src="${webformatURL}" alt="${tags}" loading="lazy" />
-            </div>  
-            <div class="gallery__info">
-              <p class="gallery__info-item">
-                <b>Likes</b>${likes}
-              </p>
-              <p class="gallery__info-item">
-                <b>Views</b>${views}
-              </p>
-              <p class="gallery__info-item">
-                <b>Comments</b>${comments}
-              </p>
-              <p class="gallery__info-item">
-                <b>Downloads</b>${downloads}
-              </p>
-            </div>
-          </a>
-        </li>`
-    )
-    .join('');
-
-  imageGalleryRef.insertAdjacentHTML('beforeend', markup);
-
-  lightbox.refresh();
+function onPagination(entries, observer) {
+  // console.log(entries);
+  entries.forEach(async entry => {
+    console.log(entry); //!
+    if (entry.isIntersecting) {
+      currentPage += 1;
+      const { data } = await fetchImmages(searchQuery, currentPage);
+      console.log(data);
+      // getTrending(currentPage).then(data => {
+      //   list.insertAdjacentHTML('beforeend', createMarkup(data.results));
+      //   if (data.page === data.total_pages) {
+      //     observer.unobserve(guard);
+      //   }
+      // });
+    }
+  });
 }
 
-function clearGalleryMarkup() {
-  imageGalleryRef.innerHTML = '';
-}
+// ! { imageGalleryRef };
