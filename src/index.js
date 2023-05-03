@@ -29,10 +29,10 @@ const perPage = 40; //??
 
 searchField.addEventListener('submit', onSubmit);
 
-async function onSubmit(evt) {
+function onSubmit(evt) {
   evt.preventDefault();
   const formEl = evt.currentTarget.elements;
-  const searchQuery = formEl.searchQuery.value.trim();
+  searchQuery = formEl.searchQuery.value.trim();
   // const { searchQuery } = evt.currentTarget.elements; //!
   // const searchName = searchQuery.value.trim(); //!
   if (searchQuery === '') {
@@ -44,7 +44,12 @@ async function onSubmit(evt) {
   }
 
   clearGalleryMarkup();
+  takeImmages();
 
+  return searchQuery;
+}
+
+async function takeImmages() {
   try {
     const { data } = await fetchImmages(searchQuery, currentPage);
     if (data.hits.length === 0) {
@@ -73,8 +78,6 @@ async function onSubmit(evt) {
   } catch (error) {
     console.log(error.message);
   }
-
-  return searchQuery;
 }
 
 async function fetchImmages(query, currentPage) {
