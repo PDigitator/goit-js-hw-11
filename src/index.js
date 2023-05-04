@@ -51,14 +51,6 @@ function onSubmit(evt) {
   fetchImmagesResult();
 }
 
-//! Варіант не async fetchImmagesResult !//
-// function fetchImmagesResult() {
-//   fetchImmages(searchQuery, currentPage)
-//     .then(({ data }) => takeImmages(data))
-//     .catch(error => console.log(error.message));
-// }
-//! =================================== !//
-
 async function fetchImmagesResult() {
   try {
     const { data } = await fetchImmages(searchQuery, currentPage);
