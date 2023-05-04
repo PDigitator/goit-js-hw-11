@@ -54,22 +54,22 @@ function onSubmit(evt) {
 }
 
 //! Варіант не async fetchImmagesResult !//
-// function fetchImmagesResult() {
-//   fetchImmages(searchQuery, currentPage)
-//     .then(({ data }) => takeImmages(data))
-//     .catch(error => console.log(error.message));
-// }
+function fetchImmagesResult() {
+  fetchImmages(searchQuery, currentPage)
+    .then(({ data }) => takeImmages(data))
+    .catch(error => console.log(error.message));
+}
 //! =================================== !//
 
-async function fetchImmagesResult() {
-  try {
-    const { data } = await fetchImmages(searchQuery, currentPage);
-    takeImmages(data);
-  } catch (error) {
-    Report.failure('ERROR', `${error.message}`, 'Close');
-    console.log(error.message);
-  }
-}
+// async function fetchImmagesResult() {
+//   try {
+//     const { data } = await fetchImmages(searchQuery, currentPage);
+//     takeImmages(data);
+//   } catch (error) {
+//     Report.failure('ERROR', `${error.message}`, 'Close');
+//     console.log(error.message);
+//   }
+// }
 
 function takeImmages(data) {
   if (data.hits.length === 0) {
