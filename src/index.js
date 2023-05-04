@@ -67,6 +67,7 @@ async function fetchImmagesResult() {
     takeImmages(data);
   } catch (error) {
     Report.failure('ERROR', `${error.message}`, 'Close');
+    console.log(error.message);
   }
 }
 
