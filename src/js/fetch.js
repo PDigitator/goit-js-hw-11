@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const perPage = 400;
+const perPage = 40;
 
 export async function fetchImmages(query, currentPage) {
   const BASE_URL = `https://pixabay.com/api/`;
