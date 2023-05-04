@@ -49,8 +49,6 @@ function onSubmit(evt) {
   currentPage = 1;
   observer.unobserve(guard);
   fetchImmagesResult();
-
-  return searchQuery;
 }
 
 //! Варіант не async fetchImmagesResult !//
