@@ -1,6 +1,4 @@
-import { imageGalleryRef } from '../index';
-
-export function createGalleryMarkup(arr) {
+export function createGalleryMarkup(elem, arr) {
   const markup = arr
     .map(
       ({
@@ -36,9 +34,9 @@ export function createGalleryMarkup(arr) {
     )
     .join('');
 
-  imageGalleryRef.insertAdjacentHTML('beforeend', markup);
+  elem.insertAdjacentHTML('beforeend', markup);
 }
 
-export function clearGalleryMarkup() {
-  imageGalleryRef.innerHTML = '';
+export function clearGalleryMarkup(elem) {
+  elem.innerHTML = '';
 }

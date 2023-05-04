@@ -132,6 +132,12 @@ img {
 .search-form__btn:hover,
 .search-form__btn:focus {
   background-color: rgb(211, 211, 211);
+  /* filter: invert(1); */
+  /* filter: blur(2px); TODO: */
+}
+
+.js-disabled-true {
+  filter: blur(2px);
 }
 
 /* Gallery */

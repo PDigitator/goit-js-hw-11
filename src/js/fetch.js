@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const perPage = 40;
+const perPage = 400;
 
 export async function fetchImmages(query, currentPage) {
   const BASE_URL = `https://pixabay.com/api/`;
@@ -12,8 +12,12 @@ export async function fetchImmages(query, currentPage) {
     orientation: 'horizontal',
     safesearch: true,
     page: currentPage,
-    per_page: perPage, //!
+    per_page: perPage,
   });
 
-  return await axios.get(`${BASE_URL}?${params}`);
+  const response = await axios.get(`${BASE_URL}?${params}`);
+  totalPages = response.data.totalHits / perPage;
+  return response;
 }
+
+export { totalPages };
