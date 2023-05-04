@@ -95,7 +95,6 @@ function takeImmages(data) {
 }
 
 function onPagination(entries, observer) {
-  // console.log(entries);
   entries.forEach(async entry => {
     if (currentPage < totalPages && entry.isIntersecting) {
       currentPage += 1;
