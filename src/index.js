@@ -66,7 +66,7 @@ async function fetchImmagesResult() {
     const { data } = await fetchImmages(searchQuery, currentPage);
     takeImmages(data);
   } catch (error) {
-    // Report.failure('ERROR', `${error.message}`, 'Close');
+    Report.failure('ERROR', `${error.message}`, 'Close');
     console.log(error.message);
   }
 }
