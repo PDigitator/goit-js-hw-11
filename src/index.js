@@ -27,7 +27,6 @@ const observer = new IntersectionObserver(onPagination, options);
 formInput.addEventListener('input', onInput);
 
 function onInput() {
-  searchBtn.disabled = false;
   ifDisabledFalse(searchBtn);
 }
 
@@ -42,6 +41,7 @@ function onSubmit(evt) {
     Notify.info(
       'Sorry, you need to fill in the search field to search for images.'
     );
+
     return;
   }
 
@@ -74,11 +74,11 @@ function takeImmages(data) {
     Notify.failure(
       'Sorry, there are no images matching your search query. Please try again.'
     );
+    ifDisabledTrue(searchBtn);
   } else {
     createGalleryMarkup(imageGalleryRef, data.hits);
     lightbox.refresh();
     observer.observe(guard);
-    searchBtn.disabled = true;
     ifDisabledTrue(searchBtn);
 
     if (currentPage === 1) {
